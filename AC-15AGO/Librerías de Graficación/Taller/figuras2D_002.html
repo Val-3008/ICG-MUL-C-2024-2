@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trazado de Figuras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+        }
+
+        canvas {
+            border: 1px solid black;
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Trazado de Figuras</h1>
+        <form id="drawForm">
+            <!-- Figura -->
+            <label for="figura">Figura:</label>
+            <select id="figura" name="figura">
+                <option value="circulo">Círculo</option>
+                <option value="triangulo">Triángulo</option>
+                <option value="cuadrado">Cuadrado</option>
+            </select>
+            <br>
+
+            <!-- Coordenadas -->
+            <label>Coordenadas:</label>
+            <input type="radio" id="cartesiano" name="coordenadas" value="cartesiano" checked>
+            <label for="cartesiano">Cartesiano</label>
+            <input type="radio" id="polar" name="coordenadas" value="polar">
+            <label for="polar">Polar</label>
+            <br>
+
+            <!-- Coordenada X -->
+            <label for="coordX">Coordenada X:</label>
+            <input type="text" id="coordX" name="coordX">
+            <br>
+
+            <!-- Coordenada Y -->
+            <label for="coordY">Coordenada Y:</label>
+            <input type="text" id="coordY" name="coordY">
+            <br>
+
+            <!-- Botón Dibujar -->
+            <button type="button" onclick="dibujar()">Dibujar</button>
+        </form>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
