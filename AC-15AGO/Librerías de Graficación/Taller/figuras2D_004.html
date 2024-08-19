@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trazado de figuras</title>
+  <style>
+    #canvas {
+      border: 1px solid black;
+      /* Establecer las dimensiones reales del canvas en atributos HTML para dibujar correctamente */
+    }
+  </style>
+</head>
+<body>
+  <h1>Trazado de figuras</h1>
+  <div>
+    <label>Figura:</label>
+    <select id="figure">
+      <option value="circulo">Círculo</option>
+      <option value="triangulo">Triángulo</option>
+      <option value="cuadrado">Cuadrado</option>
+    </select>
+  </div>
+  <div>
+    <label>Coordenadas:</label>
+    <input type="radio" id="cartesiano" name="coord" value="cartesiano" checked>
+    <label for="cartesiano">Cartesiano</label>
+    <input type="radio" id="polar" name="coord" value="polar">
+    <label for="polar">Polar</label>
+  </div>
+  <div>
+    <label>Coordenada X:</label>
+    <input type="number" id="x" value="0">
+  </div>
+  <div>
+    <label>Coordenada Y:</label>
+    <input type="number" id="y" value="0">
+  </div>
+  <button id="draw">Dibujar</button>
+  <!-- Asegúrate de establecer el ancho y alto directamente en la etiqueta canvas -->
+  <canvas id="canvas" width="400" height="400"></canvas>
+
+  <script>
+    document.getElementById('draw').addEventListener('click', function() {
+      const figure = document.getElementById('figure').value;
+      const coordType = document.querySelector('input[name="coord"]:checked').value;
+      let x = parseFloat(document.getElementById('x').value);
+      let y = parseFloat(document.getElementById('y').value);
+
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Limpiar el canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Convertir coordenadas polares a cartesianas si es necesario
+      if (coordType === 'polar') {
+        const r = x;
+        const theta = y * (Math.PI / 180);
+        x = r * Math.cos(theta);
+        y = r * Math.sin(theta);
+      }
+
+      // Trasladar el origen al centro del canvas
+      x += canvas.width / 2;
+      y = canvas.height / 2 - y;
+
+      // Dibujar la figura seleccionada
+      ctx.beginPath();
+      switch (figure) {
+        case 'circulo':
+          ctx.arc(x, y, 50, 0, 2 * Math.PI);
+          break;
+        case 'triangulo':
+          ctx.moveTo(x, y - 50);
+          ctx.lineTo(x - 50, y + 50);
+          ctx.lineTo(x + 50, y + 50);
+          ctx.closePath();
+          break;
+        case 'cuadrado':
+          ctx.rect(x - 50, y - 50, 100, 100);
+          break;
+      }
+      ctx.stroke();
+    });
+  </script>
+</body>
+</html>
