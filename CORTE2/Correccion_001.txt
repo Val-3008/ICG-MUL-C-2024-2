@@ -1,0 +1,45 @@
+
+    class Cartesiana {
+      constructor(x, y) {
+        this.#x = x;
+        this.#y = y;
+      }
+
+      get x() {
+        return this.#x;
+      }
+
+      set x(value) {
+        this.#x = value;
+      }
+
+      get y() {
+        return this.#y;
+      }
+
+      set y(value) {
+        this.#y = value;
+      }
+    }
+
+    class Polar {
+      constructor(radio, angulo) {
+        this.#radio = radio;
+        this.#angulo = angulo;
+      }
+
+      get radio() {
+        return this.#radio;
+      }
+
+      set radio(value) {
+        this.#radio = value;
+      }
+
+      get angulo() {
+        return this.#angulo;
+      }
+
+      set angulo(value) {
+        this.#angulo = value;
+      }
