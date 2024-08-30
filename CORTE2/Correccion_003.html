@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dibujo de Polígonos</title>
+  <style>
+    body {
+      font-family: Times New Roman, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #fff;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    canvas {
+      border: 1px solid black;
+      margin-top: 20px;
+    }
+
+    .controls {
+      margin: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"], input[type="text"] {
+      width: 150px;
+      margin: 0 10px;
+    }
+
+    button[type="button"] {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button[type="button"]:hover {
+      background-color: #3e8e41;
+    }
+
+    #polarInputs {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dibujo de Polígonos</h1>
+    <div class="controls">
+      <label for="coord-type">Tipo de coordenadas:</label>
+      <select id="coord-type">
+        <option value="cartesianas">Cartesianas</option>
+        <option value="polares">Polares</option>
+      </select>
+      <br>
+      <div id="cartesianInputs">
+        <label for="n">Número de lados (n):</label>
+        <input type="number" id="n" value="3" min="3">
+        <br>
+        <label for="length-type">Medida a usar:</label>
+        <select id="length-type">
+          <option value="lado">Lado</option>
+          <option value="apotema">Apotema</option>
+        </select>
+        <br>
+        <label for="coords">Coordenadas cartesianas (x,y):</label>
+        <input type="text" id="coords" placeholder="Ej: 200,200">
+      </div>
+      <div id="polarInputs">
+        <label for="polarCoords">Coordenadas polares (r,θ en grados):</label>
+        <input type="text" id="polarCoords" placeholder="Ej: 100,0">
+      </div>
+      <button id="draw-btn">Dibujar</button>
+    </div>
+    <canvas id="canvas" width="400" height="400"></canvas>
+  </div>
+
+  <script>
+    class Cartesiana {
+      constructor(x, y) {
+        this.#x = x;
+        this.#y = y;
+      }
+
+      get x() {
+        return this.#x;
+      }
+
+      set x(value) {
+        this.#x = value;
+      }
+
+      get y() {
+        return this.#y;
+      }
+
+      set y(value) {
+        this.#y = value;
+      }
+    }
+
+    class Polar {
+      constructor(radio, angulo) {
+        this.#radio = radio;
+        this.#angulo = angulo;
+      }
+
+      get radio() {
+        return this.#radio;
+      }
+
+      set radio(value) {
+        this.#radio = value;
+      }
+
+      get angulo() {
+        return this.#angulo;
+      }
+
+      set angulo(value) {
+        this.#angulo = value;
+      }
+
+      toCartesian() {
+        const radians = (Math.PI / 180) * this.#angulo;
+        const x = this.#radio * Math.cos(radians);
+        const y = this.#radio * Math.sin(radians);
+        return new Cartesiana(x, y);
+      }
+    }
+  </script>
+</body>
+</html>
