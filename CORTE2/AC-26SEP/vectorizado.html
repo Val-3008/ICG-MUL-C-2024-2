@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Primitivas Vectorizadas</title>
+    <title>Primitivas Vectorizadas con Bresenham</title>
     <style>
         svg {
             border: 1px solid black;
+        }
+        circle {
+            fill: black;
         }
     </style>
 </head>
@@ -30,8 +33,8 @@
             }
         }
 
-        // Clase para representar una línea (sin algoritmo de Bresenham aún)
-        class Linea extends Figura {
+        // Clase para representar una línea utilizando el algoritmo de Bresenham
+        class LineaBresenham extends Figura {
             #punto1;
             #punto2;
 
@@ -42,24 +45,50 @@
             }
 
             dibujar() {
-                const linea = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                linea.setAttribute('x1', this.#punto1.x);
-                linea.setAttribute('y1', this.#punto1.y);
-                linea.setAttribute('x2', this.#punto2.x);
-                linea.setAttribute('y2', this.#punto2.y);
-                linea.setAttribute('stroke', 'black');
-                linea.setAttribute('stroke-width', 2);
-                this.svgCanvas.appendChild(linea);
+                // Implementación del algoritmo de Bresenham
+                let x1 = this.#punto1.x;
+                let y1 = this.#punto1.y;
+                let x2 = this.#punto2.x;
+                let y2 = this.#punto2.y;
+
+                let dx = Math.abs(x2 - x1);
+                let dy = Math.abs(y2 - y1);
+                let sx = (x1 < x2) ? 1 : -1;
+                let sy = (y1 < y2) ? 1 : -1;
+                let err = dx - dy;
+
+                while (true) {
+                    this.#dibujarPunto(x1, y1);  // Dibujar el punto en el SVG
+
+                    if (x1 === x2 && y1 === y2) break;
+                    let e2 = 2 * err;
+                    if (e2 > -dy) {
+                        err -= dy;
+                        x1 += sx;
+                    }
+                    if (e2 < dx) {
+                        err += dx;
+                        y1 += sy;
+                    }
+                }
+            }
+
+            #dibujarPunto(x, y) {
+                const puntoSVG = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                puntoSVG.setAttribute('cx', x);
+                puntoSVG.setAttribute('cy', y);
+                puntoSVG.setAttribute('r', 1); // Radio del punto
+                this.svgCanvas.appendChild(puntoSVG);
             }
         }
 
         // Función principal para dibujar las primitivas
         function dibujarPrimitivas() {
-            // Dibujar una línea (sin usar Bresenham)
+            // Dibujar una línea con el algoritmo de Bresenham
             const punto1 = new Punto(50, 50);
             const punto2 = new Punto(200, 200);
-            const linea = new Linea(punto1, punto2);
-            linea.dibujar();
+            const lineaBresenham = new LineaBresenham(punto1, punto2);
+            lineaBresenham.dibujar();
         }
 
         // Ejecutar el dibujo cuando se carga el script
