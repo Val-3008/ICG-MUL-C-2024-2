@@ -22,7 +22,7 @@ function generarNumeroAleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Genera una lista de puntos aleatorios
+// Genera un conjunto de puntos aleatorios
 function generarPuntosAleatorios(cantidad) {
     const puntos = [];
     for (let i = 0; i < cantidad; i++) {
@@ -30,6 +30,20 @@ function generarPuntosAleatorios(cantidad) {
         const y = generarNumeroAleatorio(50, 350);  // Coordenadas Y aleatorias
         puntos.push(new Punto(x, y));
     }
+    return puntos;
+}
+
+// Ordenar puntos para evitar cruces (usando el método de ordenación polar)
+function ordenarPuntos(puntos) {
+    const centroX = puntos.reduce((acc, p) => acc + p.getX(), 0) / puntos.length;
+    const centroY = puntos.reduce((acc, p) => acc + p.getY(), 0) / puntos.length;
+
+    puntos.sort((a, b) => {
+        const anguloA = Math.atan2(a.getY() - centroY, a.getX() - centroX);
+        const anguloB = Math.atan2(b.getY() - centroY, b.getX() - centroX);
+        return anguloA - anguloB;
+    });
+    
     return puntos;
 }
 
@@ -55,6 +69,14 @@ function dibujarPoligonoCanvas(puntos) {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.stroke();
+
+    // Dibujar puntos en cada vértice
+    ctx.fillStyle = "red"; // Color de los puntos
+    puntos.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.getX(), p.getY(), 5, 0, 2 * Math.PI); // Dibuja un círculo en cada vértice
+        ctx.fill();
+    });
 
     // Verificar si el polígono es cóncavo o convexo y mostrar en el enunciado
     const tipo = esConvexo(puntos) ? "Convexo" : "Cóncavo";
@@ -92,6 +114,9 @@ window.onload = function() {
     const cantidadPuntos = generarNumeroAleatorio(3, 8);  // Polígonos con entre 3 y 8 puntos
     const puntosAleatorios = generarPuntosAleatorios(cantidadPuntos);
 
+    // Ordenar los puntos para evitar cruces y asegurar que sean cóncavos o convexos
+    const puntosOrdenados = ordenarPuntos(puntosAleatorios);
+
     // Dibuja el polígono en el canvas con los puntos generados
-    dibujarPoligonoCanvas(puntosAleatorios);
+    dibujarPoligonoCanvas(puntosOrdenados);
 }
