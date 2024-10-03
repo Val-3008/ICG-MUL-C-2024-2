@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dibujo Vectorizado de Polígono</title>
+    <title>Dibujo de Polígonos Vectorizados</title>
+    <style>
+        #svg {
+            border: 1px solid black;
+            width: 600px;
+            height: 400px;
+        }
+        #tipoPoligono {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dibujo Vectorizado de Polígono</h1>
+    <h1>Dibujo de Polígonos Vectorizados</h1>
+    <svg id="svg" width="600" height="400"></svg>
+    <div id="tipoPoligono">El polígono es: </div>
 
-    <!-- Contenedor para el SVG -->
-    <div id="svgContainer"></div>
-    
-    <!-- Enunciado para especificar si el polígono es cóncavo o convexo -->
-    <p id="tipoPoligono"></p>
-
-    <!-- Enlace al archivo JavaScript -->
+    <!-- Asegúrate de enlazar el script correcto -->
     <script src="vectorizado.js"></script>
 </body>
 </html>
-
