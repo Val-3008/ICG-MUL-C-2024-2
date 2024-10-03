@@ -8,22 +8,12 @@ class Punto {
         this.#y = y;
     }
 
-    // Métodos getter
     getX() {
         return this.#x;
     }
 
     getY() {
         return this.#y;
-    }
-
-    // Métodos setter
-    setX(x) {
-        this.#x = x;
-    }
-
-    setY(y) {
-        this.#y = y;
     }
 }
 
@@ -32,7 +22,7 @@ function generarNumeroAleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Genera una lista de puntos aleatorios
+// Genera un conjunto de puntos aleatorios
 function generarPuntosAleatorios(cantidad) {
     const puntos = [];
     for (let i = 0; i < cantidad; i++) {
@@ -43,33 +33,44 @@ function generarPuntosAleatorios(cantidad) {
     return puntos;
 }
 
-// Dibujo del polígono en formato SVG
+// Ordenar puntos para evitar cruces (usando el método de ordenación polar)
+function ordenarPuntos(puntos) {
+    const centroX = puntos.reduce((acc, p) => acc + p.getX(), 0) / puntos.length;
+    const centroY = puntos.reduce((acc, p) => acc + p.getY(), 0) / puntos.length;
+
+    puntos.sort((a, b) => {
+        const anguloA = Math.atan2(a.getY() - centroY, a.getX() - centroX);
+        const anguloB = Math.atan2(b.getY() - centroY, b.getX() - centroX);
+        return anguloA - anguloB;
+    });
+
+    return puntos;
+}
+
+// Dibujo del polígono en el SVG
 function dibujarPoligonoSVG(puntos) {
-    const svgNS = "http://www.w3.org/2000/svg";
-    const container = document.getElementById("svgContainer");
+    const svg = document.getElementById("svg");
+    svg.innerHTML = "";  // Limpiar el contenido del SVG
 
-    // Limpiar el contenedor de SVG si ya existe un polígono
-    container.innerHTML = '';
-
-    // Crear el elemento SVG
-    const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", "600");
-    svg.setAttribute("height", "400");
-    svg.setAttribute("style", "border: 1px solid black");
-
-    // Crear el elemento de polígono
-    const poligono = document.createElementNS(svgNS, "polygon");
-
-    // Crear la cadena de puntos para el polígono
-    let puntosString = puntos.map(p => `${p.getX()},${p.getY()}`).join(" ");
-    poligono.setAttribute("points", puntosString);
-    poligono.setAttribute("fill", "none");  // Solo contorno
+    // Crear un elemento <polygon> para el polígono
+    const puntosSVG = puntos.map(p => `${p.getX()},${p.getY()}`).join(" ");
+    const poligono = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    poligono.setAttribute("points", puntosSVG);
+    poligono.setAttribute("fill", "none");
     poligono.setAttribute("stroke", "black");
     poligono.setAttribute("stroke-width", "2");
-
-    // Agregar el polígono al SVG
+    
     svg.appendChild(poligono);
-    container.appendChild(svg);
+
+    // Dibujar puntos en cada vértice
+    puntos.forEach(p => {
+        const circulo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circulo.setAttribute("cx", p.getX());
+        circulo.setAttribute("cy", p.getY());
+        circulo.setAttribute("r", "5");
+        circulo.setAttribute("fill", "red"); // Color de los puntos
+        svg.appendChild(circulo);
+    });
 
     // Verificar si el polígono es cóncavo o convexo y mostrar en el enunciado
     const tipo = esConvexo(puntos) ? "Convexo" : "Cóncavo";
@@ -107,7 +108,9 @@ window.onload = function() {
     const cantidadPuntos = generarNumeroAleatorio(3, 8);  // Polígonos con entre 3 y 8 puntos
     const puntosAleatorios = generarPuntosAleatorios(cantidadPuntos);
 
-    // Dibuja el polígono SVG con los puntos generados
-    dibujarPoligonoSVG(puntosAleatorios);
-}
+    // Ordenar los puntos para evitar cruces y asegurar que sean cóncavos o convexos
+    const puntosOrdenados = ordenarPuntos(puntosAleatorios);
 
+    // Dibuja el polígono en el SVG con los puntos generados
+    dibujarPoligonoSVG(puntosOrdenados);
+}
