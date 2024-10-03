@@ -27,6 +27,22 @@ class Punto {
     }
 }
 
+// Función para generar un número aleatorio entre un rango
+function generarNumeroAleatorio(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Genera una lista de puntos aleatorios
+function generarPuntosAleatorios(cantidad) {
+    const puntos = [];
+    for (let i = 0; i < cantidad; i++) {
+        const x = generarNumeroAleatorio(50, 550);  // Coordenadas X aleatorias
+        const y = generarNumeroAleatorio(50, 350);  // Coordenadas Y aleatorias
+        puntos.push(new Punto(x, y));
+    }
+    return puntos;
+}
+
 // Dibujo del polígono en formato SVG
 function dibujarPoligonoSVG(puntos) {
     const svgNS = "http://www.w3.org/2000/svg";
@@ -55,9 +71,9 @@ function dibujarPoligonoSVG(puntos) {
     svg.appendChild(poligono);
     container.appendChild(svg);
 
-    // Verificar si el polígono es cóncavo o convexo
+    // Verificar si el polígono es cóncavo o convexo y mostrar en el enunciado
     const tipo = esConvexo(puntos) ? "Convexo" : "Cóncavo";
-    console.log("El polígono es:", tipo);
+    document.getElementById("tipoPoligono").innerText = `El polígono es: ${tipo}`;
 }
 
 // Determina si el polígono es convexo o cóncavo
@@ -85,14 +101,13 @@ function esConvexo(puntos) {
     return true; // Es convexo
 }
 
-// Ejemplo: lista de puntos
-const puntos = [
-    new Punto(100, 100),
-    new Punto(200, 50),
-    new Punto(300, 100),
-    new Punto(250, 200),
-    new Punto(150, 200)
-];
+// Asegurarnos de que el DOM esté completamente cargado antes de ejecutar el código
+window.onload = function() {
+    // Genera un número aleatorio de puntos para variar el polígono cada vez
+    const cantidadPuntos = generarNumeroAleatorio(3, 8);  // Polígonos con entre 3 y 8 puntos
+    const puntosAleatorios = generarPuntosAleatorios(cantidadPuntos);
 
-// Llamamos a la función para dibujar el polígono en SVG
-dibujarPoligonoSVG(puntos);
+    // Dibuja el polígono SVG con los puntos generados
+    dibujarPoligonoSVG(puntosAleatorios);
+}
+
